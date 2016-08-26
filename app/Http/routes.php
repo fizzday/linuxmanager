@@ -16,8 +16,8 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-    v(Auth::user()->id);
-    echo 'test';
+    v(Auth::user()->email);
+    echo 'welcome';
 });
 
 Route::auth();
