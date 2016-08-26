@@ -7,22 +7,23 @@
  */
 /**
  * 发送post请求
- * @param string $url 请求地址
+ * @param string $url      请求地址
  * @param array $post_data post键值对数据
  * @return string
  */
-function send_post($url, $post_data) {
+function send_post($url, $post_data)
+{
     $postdata = http_build_query($post_data);
-    $options = array(
+    $options  = array(
         'http' => array(
-            'method' => 'POST',
-            'header' => 'Content-type:application/x-www-form-urlencoded',
+            'method'  => 'POST',
+            'header'  => 'Content-type:application/x-www-form-urlencoded',
             'content' => $postdata,
             'timeout' => 15 * 60 // 超时时间（单位:s）
         )
     );
-    $context = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
+    $context  = stream_context_create($options);
+    $result   = file_get_contents($url, false, $context);
 
     return $result;
 }
@@ -30,16 +31,19 @@ function send_post($url, $post_data) {
 /**
  * 格式化打印, 并终止
  */
-function d($data){
+function d($data)
+{
     echo '<pre>';
     print_r($data);
     echo '</pre>';
     exit;
 }
+
 /**
  * 格式化打印, 不终止
  */
-function v($data){
+function v($data)
+{
     echo '<pre>';
     print_r($data);
     echo '</pre>';
@@ -51,28 +55,31 @@ function v($data){
  * @param string $url
  * @param number $time
  */
-function error($text="", $url='', $time=2) {
-    if(empty($text)) $text = '操作有误，请重新操作';
-    if(empty($url)) {
+function error($text = "", $url = '', $time = 2)
+{
+    if (empty($text)) $text = '操作有误，请重新操作';
+    if (empty($url)) {
         $url = $_SERVER["HTTP_REFERER"];
     }
     echo show_msg($text, true);
-    echo '<META HTTP-EQUIV="refresh" CONTENT="'.$time.'; URL='.$url.'">';
+    echo '<META HTTP-EQUIV="refresh" CONTENT="' . $time . '; URL=' . $url . '">';
     exit;
 }
+
 /**
  * 跳转加提示 -- 成功跳转
  * @param string $text
  * @param string $url
  * @param number $time
  */
-function success($text="", $url='', $time=1) {
-    if(empty($text)) $text = '操作成功';
-    if(empty($url)) {
+function success($text = "", $url = '', $time = 1)
+{
+    if (empty($text)) $text = '操作成功';
+    if (empty($url)) {
         $url = $_SERVER["HTTP_REFERER"];
     }
     echo show_msg($text, true);
-    echo '<META HTTP-EQUIV="refresh" CONTENT="'.$time.'; URL='.$url.'">';
+    echo '<META HTTP-EQUIV="refresh" CONTENT="' . $time . '; URL=' . $url . '">';
     exit;
 }
 
@@ -81,13 +88,13 @@ function success($text="", $url='', $time=1) {
  * @param mixed $data 返回数据(或提示)
  * @param num $status 返回状态
  */
-function apireturn($data='', $status="0000",$arr='')
+function apireturn($data = '', $status = "0000", $arr = '')
 {
     $re = [];
 
     $re['code'] = $status;
 
-    if ($status == '0000'){
+    if ($status == '0000') {
 
         $re['info'] = $arr;
 
@@ -95,12 +102,12 @@ function apireturn($data='', $status="0000",$arr='')
 
         if (!empty($data[0])) {
             $re['data'] = $data;
-        } else{
+        } else {
 
             $data_res[] = $data;
             $re['data'] = $data_res;
 
-            if ($data == "[]" || empty($data)){
+            if ($data == "[]" || empty($data)) {
                 $re['data'] = $data;
             }
 
@@ -108,7 +115,7 @@ function apireturn($data='', $status="0000",$arr='')
 
         $re['msg'] = 'success';
 
-    }else if($status == "9999") {
+    } else if ($status == "9999") {
         $re['msg'] = $data;
     }
 
@@ -120,11 +127,11 @@ function apireturn($data='', $status="0000",$arr='')
 /**
  * api返回的 pagenation 参数打包
  */
-function apiPagenation($total=0, $page=0, $limit=0)
+function apiPagenation($total = 0, $page = 0, $limit = 0)
 {
-    $re = [];
-    $re['totalnum'] = $total;
-    $re['page'] = $page;
+    $re               = [];
+    $re['totalnum']   = $total;
+    $re['page']       = $page;
     $re['numPerPage'] = $limit;
 
     return $re;
@@ -132,11 +139,11 @@ function apiPagenation($total=0, $page=0, $limit=0)
 
 /**
  * 展示信息到页面
- * @param null $msg 展示的信息
+ * @param null $msg    展示的信息
  * @param bool $return 是否作为内容返回
  * @return string
  */
-function show_msg($msg=null, $return=false)
+function show_msg($msg = null, $return = false)
 {
     $text =
         <<<EOT
@@ -192,24 +199,24 @@ EOT;
 
 /**
  * 临时接口测试表单生成
- * @param array $post   form提交的数组, 如 Request::all()
- * @param array $names  对应的字段, 可以是 ['id', 'name'] 等
+ * @param array $post  form提交的数组, 如 Request::all()
+ * @param array $names 对应的字段, 可以是 ['id', 'name'] 等
  * @return string
  */
-function testForm($all=[], $method='get', $names=[])
+function testForm($all = [], $method = 'get', $names = [])
 {
     if (empty($names)) $names = ['id'];
 
-    $str = '<form method='.$method. ' action="?" id="testForm">';
-    for ($i=0; $i<count($names); $i++) {
+    $str = '<form method=' . $method . ' action="?" id="testForm">';
+    for ($i = 0; $i < count($names); $i++) {
         // 判断 $name 是否为数组
         if (!empty($names) && !is_array($names)) $names = array($names);
 
         $name = $names[$i];
-        $val = isset($all[$name])?$all[$name]:'';
-        $str .= $name.' : <input type="text" name='.$name.' value='.$val.' > ';
+        $val  = isset($all[$name]) ? $all[$name] : '';
+        $str .= $name . ' : <input type="text" name=' . $name . ' value=' . $val . ' > ';
     }
-    echo '<title>'.$val.'</title>';
+    echo '<title>' . $val . '</title>';
     $str .= '<input type="submit" value="submit" />';
     $str .= '<input type="reset" onclick="formReset();" value="reset" />';
     $str .= '</form>';
@@ -226,50 +233,39 @@ function testForm($all=[], $method='get', $names=[])
 
 /**
  * 获取随机字符串 (默认随机字母或数字, 如果 $letter 和 $num 都为 true, 则是字母开头)
- * @param int $len      长度
- * @param array $conf   ['num', 'letter', 'upper'] 或者 单个的 'num'
+ * @param int $len    长度
+ * @param array $conf ['number', 'letter', 'upper'] 或者 单个的 'num'
  * @return string       期望长度的返回值
  */
-function getCode($len=10, $conf=['num', 'letter'])
+function getCode($len = 10, $conf = ['number', 'letter'])
 {
     // 源字符串, 去除了数字 1,4,0 ; 去除了字母 i,l,o  易混淆的字符
-    $num_str = "2356789";
-    $letter_str = "abcdefghjkmnpqrstuvwxyz";
-    $letter_str_upper = "ABCDEFGHJKMNPQRSTUVWXYZ";
-
-    // 定义返回的字符串
-    $str = "";
-    $str_all = "";
+    $origin_str['number'] = "2356789";
+    $origin_str['letter'] = "abcdefghjkmnpqrstuvwxyz";
+    $origin_str['upper']  = "ABCDEFGHJKMNPQRSTUVWXYZ";
 
     // 判断 $conf 类型
     if (!empty($conf) && !is_array($conf)) $conf = array($conf);
 
-    foreach ($conf as $item) {
-        switch ($item) {
-            case 'num':     $str_all .= $num_str;           break;
-            case 'letter':  $str_all .= $letter_str;        break;
-            case 'upper':   $str_all .= $letter_str_upper;  break;
-        }
-    }
+    // 拿到指定类型的所有字符串
+    $str_all = array_reduce($conf, function ($res, $item) use ($origin_str) {
+        return $res . $origin_str[$item];
+    });
 
-    // 获取总长度
-    $count_str = strlen($str_all);
-
-    for ($i=0; $i<$len; $i++) {
-        $index = mt_rand(0,$count_str-1);
-        $str .= $str_all[$index];
-    }
+    // 打乱并截取对应长度的字符串
+    $str = substr(str_shuffle($str_all), 0, $len);
 
     return $str;
 }
 
 /**
  * 指针写入文件
- * @param unknown $name	文件名
- * @param unknown $data	内容
- * @param string $mode	打开方式
+ * @param unknown $name 文件名
+ * @param unknown $data 内容
+ * @param string $mode  打开方式
  */
-function file_set($file, $data, $mode='a'){
+function file_set($file, $data, $mode = 'a')
+{
     if (!$file || !$data) return false;
 
 //    $dir = dirname($file);
@@ -290,13 +286,13 @@ function file_set($file, $data, $mode='a'){
  * @param string $str
  * @return string
  */
-function getTextareaRealStr($textareaStr="")
+function getTextareaRealStr($textareaStr = "")
 {
     $str = "";
     if ($textareaStr) {
         $strArray = explode("\r\n", $textareaStr);
         foreach ($strArray as $item) {
-            $str .= $item.PHP_EOL;
+            $str .= $item . PHP_EOL;
         }
     }
 
@@ -312,10 +308,10 @@ function handleWhere($req)
 {
     $where = [];
     if (!empty($req['where'])) {
-        foreach ($req['where'] as $k=>$v) {
+        foreach ($req['where'] as $k => $v) {
             if (!empty($req['where'][$k])) {
-                if ($k == 'id') $where[] = [$k,  $v];
-                else $where[] = [$k, 'like', '%'.$v.'%'];
+                if ($k == 'id') $where[] = [$k, $v];
+                else $where[] = [$k, 'like', '%' . trim($v) . '%'];
             }
         }
     }
@@ -324,12 +320,13 @@ function handleWhere($req)
 }
 
 /**
- * 获取 url 的一级域名, (特殊情况如 net.cn, com.cn, org.cn等, 不可获取)
+ * 获取 url 的一级域名, (特殊情况如 .net.cn, .com.cn, .org.cn等, 不可获取)
  * @param $url
  */
 function getDomain($url)
 {
     preg_match('/[\w][\w-]*\.(?:com\.cn|com|cn|co|net|org|gov|cc|biz|info)(\/|$)/isU', $url, $domain);
+
     return rtrim($domain[0], '/');
 }
 
@@ -345,5 +342,6 @@ function start_with($word, $str)
         $len = strlen(trim($str));
         if (substr($word, 0, $len) == $str) return true;
     }
+
     return false;
 }

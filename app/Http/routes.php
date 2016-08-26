@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-    v(Auth::user()->email);
+    d(getCode(8, ['letter','upper', 'number']));
     echo 'welcome';
 });
 
